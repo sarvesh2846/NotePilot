@@ -1,0 +1,252 @@
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>StudyEasierAI - Your Academic Powerhouse</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+      
+      <!-- Tailwind Config for Theming -->
+      <script>
+        tailwind.config = {
+          darkMode: 'class',
+          theme: {
+            extend: {
+              colors: {
+                app: 'var(--bg-app)',
+                sidebar: 'var(--bg-sidebar)',
+                surface: 'var(--bg-surface)',
+                surface2: 'var(--bg-surface-2)',
+                border: 'var(--border-base)',
+                text: {
+                  main: 'var(--text-main)',
+                  muted: 'var(--text-muted)',
+                  invert: 'var(--text-invert)'
+                }
+              }
+            }
+          }
+        }
+      </script>
+
+      <!-- MathJax Configuration & Loader -->
+      <script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            packages: {'[+]': ['noerrors', 'noundefined']}
+          },
+          options: {
+            ignoreHtmlClass: 'tex2jax_ignore',
+            processHtmlClass: 'tex2jax_process'
+          },
+          loader: {load: ['[tex]/noerrors', '[tex]/noundefined']}
+        };
+      </script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* THEME VARIABLES */
+        :root {
+          /* DEFAULT THEME (Cyber/Dark) - EXACT Match to current hex codes */
+          --bg-app: #0a0a0a;
+          --bg-sidebar: #0d0d0d;
+          --bg-surface: #151515;
+          --bg-surface-2: #121212;
+          --border-base: #1e293b; /* slate-800 */
+          --text-main: #f1f5f9;   /* slate-100 */
+          --text-muted: #64748b;  /* slate-500 */
+          --text-invert: #000000;
+        }
+
+        .theme-light {
+          /* LIGHT THEME (Academic Paper) */
+          --bg-app: #f8fafc;      /* slate-50 */
+          --bg-sidebar: #ffffff;
+          --bg-surface: #ffffff;
+          --bg-surface-2: #f1f5f9;
+          --border-base: #e2e8f0; /* slate-200 */
+          --text-main: #0f172a;   /* slate-900 */
+          --text-muted: #64748b;  /* slate-500 */
+          --text-invert: #ffffff;
+        }
+
+        .theme-eyecare {
+          /* EYECARE MODE (Warm/Sepia for Reduced Eye Strain) */
+          --bg-app: #151412;      /* Very dark warm charcoal */
+          --bg-sidebar: #1c1b19;  /* Slightly lighter warm charcoal */
+          --bg-surface: #262422;  /* Warm dark grey surface */
+          --bg-surface-2: #33302c; /* Lighter surface for active elements */
+          --border-base: #45403a; /* Low contrast warm border */
+          --text-main: #e6e0d4;   /* Soft warm white (parchment tint) */
+          --text-muted: #9c968f;  /* Muted warm grey */
+          --text-invert: #0d0c0b;
+        }
+
+        .theme-custom {
+          /* CUSTOM MODE - Variables here will be overridden by Inline Styles from JS */
+          /* These are fallback values if JS fails */
+          --bg-app: #222222;
+          --bg-sidebar: #222222;
+          --bg-surface: #333333;
+          --bg-surface-2: #444444;
+          --border-base: #555555;
+          --text-main: #ffffff;
+          --text-muted: #aaaaaa;
+          --text-invert: #000000;
+        }
+
+        body {
+          font-family: 'Inter', sans-serif;
+          background-color: var(--bg-app);
+          color: var(--text-main);
+          margin: 0;
+          transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Apply variable colors to standard classes via mapping */
+        .bg-app { background-color: var(--bg-app); }
+        .bg-sidebar { background-color: var(--bg-sidebar); }
+        .bg-surface { background-color: var(--bg-surface); }
+        .border-theme { border-color: var(--border-base); }
+        .text-theme-main { color: var(--text-main); }
+        .text-theme-muted { color: var(--text-muted); }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #27272a;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #3f3f46;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        /* MathJax Custom Overrides for Dark Mode */
+        mjx-container[jax="CHTML"][display="true"] {
+          margin: 1.5em 0 !important;
+          padding: 1em;
+          background: rgba(16, 185, 129, 0.03);
+          border-radius: 1rem;
+          border: 1px solid rgba(16, 185, 129, 0.1);
+          overflow-x: auto;
+          overflow-y: hidden;
+        }
+        mjx-container {
+          color: #10b981 !important; /* Emerald-500 */
+          font-size: 1.1em !important;
+        }
+        
+        /* 3D Flip Card Utilities */
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+        .transform-style-3d {
+          transform-style: preserve-3d;
+        }
+        .backface-hidden {
+          -webkit-backface-visibility: hidden; /* Safari */
+          backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+          transform: rotateY(180deg);
+        }
+
+        /* PRINT / EXPORT PDF STYLES */
+        .print-only { display: none !important; }
+
+        @media print {
+          @page { margin: 20mm; size: auto; }
+          
+          /* Reset Body to White Paper Mode */
+          body, html, #root, main {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: visible !important;
+            height: auto !important;
+          }
+
+          /* Hide UI Elements */
+          .no-print, 
+          nav, 
+          aside, 
+          button, 
+          input, 
+          .sidebar, 
+          header.no-print-header,
+          .auth-container,
+          .theme-selector { 
+            display: none !important; 
+          }
+
+          /* Show Print-Specific Content */
+          .print-only { display: block !important; }
+
+          /* Typography Overrides for Print */
+          h1, h2, h3, h4, h5, h6 {
+            color: #000000 !important;
+            page-break-after: avoid;
+          }
+          p, li, span, div {
+            color: #1f2937 !important; /* Dark Gray for readability */
+          }
+          
+          /* Make Math Black for Print */
+          mjx-container { color: #000000 !important; }
+          mjx-container[jax="CHTML"][display="true"] {
+            background: transparent !important;
+            border: 1px solid #eee !important;
+          }
+
+          /* Layout Fixes */
+          .summary-print-container {
+            background: white !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+          }
+
+          /* Ensure links are readable */
+          a { text-decoration: underline; color: #2563eb !important; }
+        }
+      </style>
+    <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@^19.2.4",
+      "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+      "react/": "https://esm.sh/react@^19.2.4/",
+      "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
+      "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.93.1",
+      "vite": "https://esm.sh/vite@^7.3.1",
+      "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+    <body>
+      <div id="root"></div>
+      <script type="module" src="/index.tsx"></script>
+    </body>
+  </html>
