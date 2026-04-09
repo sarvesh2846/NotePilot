@@ -233,8 +233,8 @@ const App: React.FC = () => {
     
     const root = document.documentElement;
 
-    // Remove all theme classes first (including old midnight just in case)
-    root.classList.remove('theme-light', 'theme-eyecare', 'theme-forest', 'theme-midnight', 'theme-custom');
+    // Remove all theme classes first 
+    root.classList.remove('theme-light', 'theme-eyecare', 'theme-human', 'theme-forest', 'theme-midnight', 'theme-custom');
     
     // Clear inline styles if we are switching AWAY from custom
     if (newTheme !== 'custom') {
@@ -358,10 +358,20 @@ const App: React.FC = () => {
       setView('vision');
     } else {
       const mockPackage: any = { title: asset.title };
-      if (asset.type === 'summary') mockPackage.summary = { content: safeAsset.content };
+      if (asset.type === 'summary') {
+          if (typeof safeAsset.content === 'object' && safeAsset.content.content) {
+              mockPackage.summary = { content: safeAsset.content.content };
+              mockPackage.glossary = safeAsset.content.glossary;
+          } else {
+              mockPackage.summary = { content: safeAsset.content };
+          }
+      }
       if (asset.type === 'quiz') mockPackage.quiz = safeAsset.content;
       if (asset.type === 'slides') mockPackage.slides = safeAsset.content;
       if (asset.type === 'flashcards') mockPackage.flashcards = safeAsset.content;
+      if (asset.type === 'mindmap') mockPackage.mindmap = safeAsset.content;
+      if (asset.type === 'formulas') mockPackage.formulas = safeAsset.content;
+      if (asset.type === 'gaps') mockPackage.knowledgeGaps = safeAsset.content;
       
       setLabState({
         isLoading: false,
@@ -389,10 +399,13 @@ const App: React.FC = () => {
       const result = await processUnifiedLabContent(sourcePayload);
       setLabState(prev => ({ ...prev, isLoading: false, currentPackage: result }));
 
-      await handleSaveAsset({ title: result.title, type: 'summary', content: result.summary.content, sourceName });
+      await handleSaveAsset({ title: result.title, type: 'summary', content: { content: result.summary.content, glossary: result.glossary }, sourceName });
       await handleSaveAsset({ title: result.title, type: 'quiz', content: result.quiz, sourceName });
       await handleSaveAsset({ title: result.title, type: 'flashcards', content: result.flashcards, sourceName });
       await handleSaveAsset({ title: result.title, type: 'slides', content: result.slides, sourceName });
+      if (result.mindmap) await handleSaveAsset({ title: result.title, type: 'mindmap', content: result.mindmap, sourceName });
+      if (result.formulas) await handleSaveAsset({ title: result.title, type: 'formulas', content: result.formulas, sourceName });
+      if (result.knowledgeGaps) await handleSaveAsset({ title: result.title, type: 'gaps', content: result.knowledgeGaps, sourceName });
 
     } catch (err: any) {
       setLabState(prev => ({ ...prev, isLoading: false, error: getErrorMessage(err) }));
@@ -485,8 +498,8 @@ const App: React.FC = () => {
     return (
       <div className="min-h-screen bg-app flex flex-col items-center justify-center p-6 text-white animate-fadeIn">
         <div className="w-16 h-16 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mb-6"></div>
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-400">Initializing Core AI...</p>
-        <p className="text-slate-600 text-[9px] mt-4 uppercase font-bold tracking-widest">Verifying Academic Handshake</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 mt-4">Loading application...</p>
+        <p className="text-slate-500 text-[10px] mt-2">Preparing your academic workspace</p>
       </div>
     );
   }

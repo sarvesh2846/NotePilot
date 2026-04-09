@@ -30,7 +30,7 @@ export interface ChatSession {
 
 export type ViewState = 'dashboard' | 'chat' | 'tutor' | 'lab' | 'research' | 'vision' | 'vault' | 'analytics' | 'focus_studio' | 'about' | 'live';
 
-export type LabTool = 'summary' | 'quiz' | 'flashcards' | 'slides';
+export type LabTool = 'summary' | 'quiz' | 'flashcards' | 'slides' | 'mindmap' | 'formulas' | 'gaps';
 
 export interface QuizQuestion {
   question: string;
@@ -51,19 +51,39 @@ export interface Slide {
   imageKeyword: string;
 }
 
+export interface Formula {
+  equation: string;
+  explanation: string;
+}
+
+export interface KnowledgeGap {
+  concept: string;
+  missingInfo: string;
+  suggestion: string;
+}
+
+export interface GlossaryTerm {
+  term: string;
+  definition: string;
+}
+
 export interface LabPackage {
   title: string;
   summary: { content: string };
   quiz: QuizQuestion[];
   flashcards: Flashcard[];
   slides: Slide[];
+  mindmap: string; // Mermaid syntax
+  formulas: Formula[];
+  knowledgeGaps: KnowledgeGap[];
+  glossary: GlossaryTerm[];
 }
 
 export interface LabAsset {
   id: string;
   userId: string;
   title: string;
-  type: 'summary' | 'quiz' | 'flashcards' | 'slides' | 'research' | 'image_analysis';
+  type: 'summary' | 'quiz' | 'flashcards' | 'slides' | 'research' | 'image_analysis' | 'mindmap' | 'formulas' | 'gaps';
   content: any;
   sourceName: string;
   timestamp: number;
@@ -100,7 +120,7 @@ export interface VisionState {
   error: string | null;
 }
 
-export type AppTheme = 'default' | 'light' | 'eyecare' | 'midnight' | 'forest' | 'custom';
+export type AppTheme = 'default' | 'light' | 'eyecare' | 'human' | 'midnight' | 'forest' | 'custom';
 
 export interface CustomThemeColors {
   bgApp: string;

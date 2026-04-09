@@ -32,12 +32,34 @@ const FlashcardView: React.FC<FlashcardViewProps> = ({ flashcards }) => {
 
   const currentCard = flashcards[currentIndex];
 
+  const handleExportCSV = () => {
+    if (!flashcards || flashcards.length === 0) return;
+    const csvContent = flashcards.map(card => `"${card.front.replace(/"/g, '""')}","${card.back.replace(/"/g, '""')}"`).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'study_easier_anki_flashcards.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   if (!currentCard) return null;
 
   return (
-    <div className="flex flex-col items-center py-12 px-4 w-full animate-fadeIn">
+    <div className="flex flex-col items-center py-12 px-4 w-full animate-fadeIn relative">
+      {/* Export Button */}
+      <div className="absolute top-0 right-4">
+        <button 
+           onClick={handleExportCSV}
+           className="px-4 py-2 bg-indigo-600/10 text-indigo-500 hover:bg-indigo-600 hover:text-white transition-colors rounded-xl font-bold text-xs uppercase tracking-widest flex items-center gap-2 border border-indigo-500/20"
+        >
+           <i className="fas fa-file-csv text-sm"></i> Anki CSV Export
+        </button>
+      </div>
+
       {/* 3D Card Container */}
-      <div className="w-full max-w-xl h-96 perspective-1000 cursor-pointer group" onClick={() => setIsFlipped(!isFlipped)}>
+      <div className="w-full max-w-xl h-96 perspective-1000 cursor-pointer group mt-4" onClick={() => setIsFlipped(!isFlipped)}>
         <div
           className={`relative w-full h-full transition-transform duration-700 transform-style-3d shadow-2xl rounded-3xl ${
             isFlipped ? 'rotate-y-180' : ''

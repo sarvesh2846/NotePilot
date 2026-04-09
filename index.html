@@ -3,7 +3,7 @@
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>StudyEasierAI - Your Academic Powerhouse</title>
+      <title>NotePilot - Your Academic Powerhouse</title>
       <script src="https://cdn.tailwindcss.com"></script>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       
@@ -52,15 +52,29 @@
         
         /* THEME VARIABLES */
         :root {
-          /* DEFAULT THEME (Cyber/Dark) - EXACT Match to current hex codes */
+          /* DEFAULT THEME (Cyber/Dark) */
           --bg-app: #0a0a0a;
           --bg-sidebar: #0d0d0d;
           --bg-surface: #151515;
           --bg-surface-2: #121212;
-          --border-base: #1e293b; /* slate-800 */
-          --text-main: #f1f5f9;   /* slate-100 */
-          --text-muted: #64748b;  /* slate-500 */
+          --border-base: #1e293b; 
+          --text-main: #f1f5f9;   
+          --text-muted: #64748b;  
           --text-invert: #000000;
+          --logo-filter: invert(1) brightness(10) hue-rotate(180deg);
+        }
+
+        .theme-human {
+          /* Sleek Human Minimalist */
+          --bg-app: #f9fafb;      
+          --bg-sidebar: #ffffff;  
+          --bg-surface: #ffffff;  
+          --bg-surface-2: #f3f4f6; 
+          --border-base: #e5e7eb; 
+          --text-main: #111827;   
+          --text-muted: #6b7280;  
+          --text-invert: #ffffff;
+          --logo-filter: none;
         }
 
         .theme-light {
@@ -73,6 +87,7 @@
           --text-main: #0f172a;   /* slate-900 */
           --text-muted: #64748b;  /* slate-500 */
           --text-invert: #ffffff;
+          --logo-filter: none;
         }
 
         .theme-eyecare {
@@ -85,6 +100,7 @@
           --text-main: #e6e0d4;   /* Soft warm white (parchment tint) */
           --text-muted: #9c968f;  /* Muted warm grey */
           --text-invert: #0d0c0b;
+          --logo-filter: invert(1) brightness(1.5) sepia(0.5);
         }
 
         .theme-custom {
@@ -108,13 +124,24 @@
           transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Apply variable colors to standard classes via mapping */
+        /* Glassmorphism Classes */
+        .glass-panel {
+          background: rgba(var(--bg-surface-rgb, 20, 20, 20), 0.6) !important;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
         .bg-app { background-color: var(--bg-app); }
         .bg-sidebar { background-color: var(--bg-sidebar); }
         .bg-surface { background-color: var(--bg-surface); }
         .border-theme { border-color: var(--border-base); }
         .text-theme-main { color: var(--text-main); }
         .text-theme-muted { color: var(--text-muted); }
+        
+        .theme-logo {
+          filter: var(--logo-filter, none);
+          transition: filter 0.3s ease;
+        }
 
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;

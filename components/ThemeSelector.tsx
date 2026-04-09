@@ -25,6 +25,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ currentTheme, onThemeChan
 
   const themes: { id: AppTheme; name: string; color: string; icon: string }[] = [
     { id: 'default', name: 'Cyber Deck', color: 'bg-[#0a0a0a]', icon: 'fa-microchip' },
+    { id: 'human', name: 'Sleek Minimal', color: 'bg-[#f8fafc]', icon: 'fa-user' },
     { id: 'light', name: 'Light Mode', color: 'bg-[#f8fafc]', icon: 'fa-sun' },
     { id: 'eyecare', name: 'EyeCare Mode', color: 'bg-[#1c1917]', icon: 'fa-eye-slash' },
     { id: 'custom', name: 'Custom Mode', color: 'bg-gradient-to-br from-indigo-500 to-purple-500', icon: 'fa-palette' },

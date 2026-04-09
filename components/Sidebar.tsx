@@ -24,6 +24,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [filterMode, setFilterMode] = useState<'all' | 'tutor' | 'study'>('all');
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
+  const historyRef = useRef<HTMLDivElement>(null);
+  
+  const isSearchExpanded = isHistoryExpanded || searchTerm.length > 0;
   
   // Close menu when clicking outside
   const menuRef = useRef<HTMLDivElement>(null);
@@ -31,6 +35,9 @@ const Sidebar: React.FC<SidebarProps> = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpenId(null);
+      }
+      if (historyRef.current && !historyRef.current.contains(event.target as Node)) {
+        setIsHistoryExpanded(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -79,14 +86,28 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {/* --- TOP SECTION: Logo & Main Navigation --- */}
       <div className="flex-shrink-0 p-6 pb-2">
-        <div className="flex items-center gap-3 mb-6 px-2 cursor-pointer group" onClick={() => { setView('dashboard'); onMobileClose(); }}>
-          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20 group-hover:scale-105 transition-transform">
-            <i className="fas fa-graduation-cap text-lg"></i>
+        <div className="flex items-center justify-center mb-6 cursor-pointer group" onClick={() => { setView('dashboard'); onMobileClose(); }}>
+          <img 
+            src="/logo.svg" 
+            alt="NotePilot Logo" 
+            className="w-full h-auto max-h-32 object-contain group-hover:scale-[1.02] transition-transform theme-logo" 
+            onError={(e) => {
+              // Fallback if they haven't saved the image yet
+              e.currentTarget.style.display = 'none';
+              if(e.currentTarget.nextElementSibling) {
+                 (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'flex';
+              }
+            }}
+          />
+          <div className="hidden items-center gap-3" style={{display: 'none'}}>
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+              <i className="fas fa-paper-plane text-lg"></i>
+            </div>
+            <span className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-text-main to-text-muted uppercase tracking-tighter">NotePilot</span>
           </div>
-          <span className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-text-main to-text-muted uppercase tracking-tighter">StudyEasierAI</span>
         </div>
 
-        <nav className="space-y-1">
+        <nav className={`space-y-1 overflow-hidden transition-all duration-500 ease-in-out ${isSearchExpanded ? 'max-h-0 opacity-0 !m-0' : 'max-h-[600px] opacity-100'}`}>
           <button 
             onClick={() => setView('dashboard')}
             className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl font-bold transition-all text-sm ${view === 'dashboard' ? 'bg-indigo-600 text-white shadow-lg' : 'text-text-muted hover:text-text-main hover:bg-surface'}`}
@@ -118,28 +139,15 @@ const Sidebar: React.FC<SidebarProps> = ({
                onClick={() => setView('lab')}
                className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl font-bold transition-all text-sm ${view === 'lab' ? 'bg-emerald-600 text-white shadow-lg' : 'text-text-muted hover:text-text-main hover:bg-surface'}`}
              >
-               <i className="fas fa-microscope w-5 text-center"></i> Knowledge Lab
+               <i className="fas fa-microscope w-5 text-center"></i> Generate Notes
              </button>
 
-             <button 
-               onClick={() => setView('research')}
-               className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl font-bold transition-all text-sm ${view === 'research' ? 'bg-cyan-600 text-white shadow-lg' : 'text-text-muted hover:text-text-main hover:bg-surface'}`}
-             >
-               <i className="fas fa-globe-americas w-5 text-center"></i> Deep Research
-             </button>
-             
+
              <button 
                onClick={() => setView('vision')}
                className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl font-bold transition-all text-sm ${view === 'vision' ? 'bg-purple-600 text-white shadow-lg' : 'text-text-muted hover:text-text-main hover:bg-surface'}`}
              >
-               <i className="fas fa-eye w-5 text-center"></i> Image Analysis
-             </button>
-
-             <button 
-               onClick={() => setView('live')}
-               className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl font-bold transition-all text-sm ${view === 'live' ? 'bg-rose-600 text-white shadow-lg' : 'text-text-muted hover:text-text-main hover:bg-surface'}`}
-             >
-               <i className="fas fa-microphone-alt w-5 text-center"></i> Live Study
+               <i className="fas fa-eye w-5 text-center"></i> Analyze Image
              </button>
 
              <button 
@@ -148,16 +156,29 @@ const Sidebar: React.FC<SidebarProps> = ({
              >
                <i className="fas fa-vault w-5 text-center"></i> Vault
              </button>
+
+             <button 
+               onClick={() => setView('focus_studio')}
+               className={`w-full flex items-center gap-4 px-4 py-2.5 rounded-xl font-bold transition-all text-sm ${view === 'focus_studio' ? 'bg-rose-600 text-white shadow-lg' : 'text-text-muted hover:text-text-main hover:bg-surface'}`}
+             >
+               <i className="fas fa-clock w-5 text-center"></i> Focus Studio
+             </button>
           </div>
         </nav>
       </div>
 
       {/* --- MIDDLE SECTION: History (Takes all remaining space) --- */}
-      <div className="flex-1 flex flex-col min-h-0 border-t border-border mt-2 pt-2">
+      <div 
+        ref={historyRef}
+        onClick={() => setIsHistoryExpanded(true)}
+        className="flex-1 flex flex-col min-h-0 border-t border-border mt-2 pt-2 cursor-pointer"
+      >
          {/* History Header & Search */}
          <div className="flex-shrink-0 px-6 pb-2">
             <div className="flex items-center justify-between mb-2">
-               <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">History</span>
+               <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] flex items-center">
+                 <i className="fas fa-comments text-indigo-400 mr-2 text-sm"></i> Recent Conversations
+               </span>
                <button onClick={onNewChat} className="text-text-muted hover:text-indigo-400 p-1 transition-colors" title="New Chat">
                  <i className="fas fa-plus"></i>
                </button>
@@ -173,27 +194,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                />
                <i className="fas fa-search absolute left-2.5 top-2 text-text-muted text-[10px]"></i>
             </div>
-            
-            <div className="flex bg-surface p-0.5 rounded-lg border border-border">
-                <button 
-                  onClick={() => setFilterMode('all')}
-                  className={`flex-1 py-1 text-[9px] font-black uppercase tracking-wider rounded-md transition-all ${filterMode === 'all' ? 'bg-indigo-600 text-white shadow' : 'text-text-muted hover:text-text-main'}`}
-                >
-                  All
-                </button>
-                <button 
-                  onClick={() => setFilterMode('tutor')}
-                  className={`flex-1 py-1 text-[9px] font-black uppercase tracking-wider rounded-md transition-all ${filterMode === 'tutor' ? 'bg-indigo-600 text-white shadow' : 'text-text-muted hover:text-text-main'}`}
-                >
-                  Tutor
-                </button>
-                <button 
-                  onClick={() => setFilterMode('study')}
-                  className={`flex-1 py-1 text-[9px] font-black uppercase tracking-wider rounded-md transition-all ${filterMode === 'study' ? 'bg-indigo-600 text-white shadow' : 'text-text-muted hover:text-text-main'}`}
-                >
-                  Study
-                </button>
-             </div>
+
          </div>
 
          {/* Scrollable List */}
@@ -246,43 +247,16 @@ const Sidebar: React.FC<SidebarProps> = ({
          </div>
       </div>
 
-      {/* --- BOTTOM SECTION: Secondary Tools & User Profile --- */}
-      <div className="flex-shrink-0 bg-app border-t border-border">
-         {/* Productivity Links */}
-         <div className="px-6 pt-4 space-y-1">
-            <button 
-              onClick={() => setView('analytics')}
-              className={`w-full flex items-center gap-4 px-4 py-2 rounded-xl font-bold transition-all text-xs ${view === 'analytics' ? 'bg-blue-600 text-white shadow-lg' : 'text-text-muted hover:text-text-main hover:bg-surface'}`}
-            >
-              <i className="fas fa-chart-pie w-4 text-center"></i> Analytics
-            </button>
-
-            <button 
-              onClick={() => setView('focus_studio')}
-              className={`w-full flex items-center gap-4 px-4 py-2 rounded-xl font-bold transition-all text-xs ${view === 'focus_studio' ? 'bg-rose-600 text-white shadow-lg' : 'text-text-muted hover:text-text-main hover:bg-surface'}`}
-            >
-              <i className="fas fa-clock w-4 text-center"></i> Focus Studio
-            </button>
-
-            <button 
-              onClick={() => setView('about')}
-              className={`w-full flex items-center gap-4 px-4 py-2 rounded-xl font-bold transition-all text-xs ${view === 'about' ? 'bg-pink-600 text-white shadow-lg' : 'text-text-muted hover:text-text-main hover:bg-surface'}`}
-            >
-              <i className="fas fa-info-circle w-4 text-center"></i> About & Usage
-            </button>
-         </div>
-
-         {/* User Profile */}
-         <div className="p-6 pt-4 mt-2 border-t border-border/50">
-           <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center font-bold text-text-muted overflow-hidden">
-                 <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`} alt="user" />
-              </div>
-              <div className="min-w-0">
-                 <div className="text-xs font-bold text-text-main truncate">{user.name}</div>
-                 <button onClick={onLogout} className="text-[9px] text-rose-500 font-black uppercase hover:underline">Sign Out</button>
-              </div>
-           </div>
+      {/* --- BOTTOM SECTION: User Profile --- */}
+      <div className="flex-shrink-0 bg-app border-t border-border p-4">
+         <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-surface border border-border flex items-center justify-center overflow-hidden shrink-0">
+               <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`} alt="user" className="w-full h-full object-cover" />
+            </div>
+            <div className="min-w-0 flex-1 flex flex-col justify-center">
+               <div className="text-xs font-bold text-text-main truncate leading-tight">{user.name}</div>
+               <button onClick={onLogout} className="text-[9px] text-rose-500 font-black uppercase tracking-wider text-left hover:text-rose-400 mt-0.5">Sign Out</button>
+            </div>
          </div>
       </div>
     </div>

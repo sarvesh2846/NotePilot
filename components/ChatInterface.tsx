@@ -160,6 +160,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ chat, onUpdateChat }) => 
       {/* Messages Scroll Area */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar scroll-smooth">
         <div ref={chatContainerRef} className="space-y-8 md:space-y-10 max-w-4xl mx-auto pb-4">
+          
+          {/* Animated Empty State for Tutor Mode */}
+          {chat.mode === 'tutor' && (
+             <div className={`flex flex-col items-center justify-center transition-all duration-700 ease-in-out overflow-hidden ${chat.messages.length === 0 ? 'opacity-100 max-h-[600px] mt-8 md:mt-16 mb-8 scale-100' : 'opacity-0 max-h-0 mt-0 mb-0 scale-90 pointer-events-none'}`}>
+               <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-[3rem] p-1 bg-gradient-to-br from-indigo-500 to-purple-500 mb-8 shadow-2xl shadow-indigo-500/30">
+                 <img src="/woman.gif" alt="AI Tutor" className="w-full h-full object-cover rounded-[2.8rem] bg-surface" />
+               </div>
+               <h3 className="text-3xl font-black text-text-main tracking-tight">Ready to master this?</h3>
+               <p className="text-text-muted text-sm mt-4 text-center max-w-md leading-relaxed font-medium">I'm your dedicated AI Tutor. I can explain complex concepts, test your knowledge, or guide you step-by-step.</p>
+             </div>
+          )}
+
           {chat.messages.map((msg) => (
             <div key={msg.id} className={`flex gap-3 md:gap-6 animate-fadeIn ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                {msg.role === 'model' && <div className="w-8 h-8 md:w-10 md:h-10 rounded-2xl bg-indigo-600 shrink-0 flex items-center justify-center text-white shadow-lg shadow-indigo-600/20 text-xs md:text-base"><i className="fas fa-brain"></i></div>}

@@ -1,0 +1,21 @@
+Understanding Machine Learning: A Brief Overview
+
+Machine learning (ML) is a subset of artificial intelligence that involves training algorithms to learn from data.
+
+Key Concepts:
+- Neural Networks: A series of algorithms that endeavor to recognize underlying relationships in a set of data through a process that mimics the way the human brain operates. In this sense, neural networks refer to systems of neurons, either organic or artificial in nature. 
+- Overfitting: A modeling error that occurs when a function is too closely fit to a limited set of data points.
+- Gradient Descent: An optimization algorithm used to minimize some function by iteratively moving in the direction of steepest descent as defined by the negative of the gradient.
+
+Important Formulas:
+The standard cost function for linear regression using Mean Squared Error (MSE) is:
+J(θ) = \frac{1}{2m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)})^2
+
+Where:
+- m is the number of training examples
+- x is the input feature
+- y is the actual output
+- \theta are the model weights
+
+Knowledge Gaps:
+While the concept of gradient descent is clear, the document does not fully explain how learning rates affect the convergence speed and why it might overshoot the minimum.

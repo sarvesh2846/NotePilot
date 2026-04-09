@@ -128,7 +128,7 @@ export const processUnifiedLabContent = async (
     } else if (sourcePayload.url) {
         parts.push({ text: `Context: ${sourcePayload.url}` });
     }
-    parts.push({ text: "Generate study package: summary, quiz, flashcards, slides. Return strict JSON." });
+    parts.push({ text: "Generate study package: summary (Must be highly structured using markdown headings #, subheadings ##, and bullet points - for readability), quiz, flashcards, slides, mindmap (in strict mermaid.js mindmap syntax, starting with 'mindmap', use indentation for hierarchy, no markdown code block fences), formulas (array of equation and explanation), knowledgeGaps (array of concept, missingInfo, suggestion), and glossary (array of term and definition). Return strict JSON matching the schema." });
     
     // Using FLASH_MODEL to conserve quota for large context tasks
     const response = await retryWithBackoff<GenerateContentResponse>(() => ai.models.generateContent({
@@ -140,12 +140,16 @@ export const processUnifiedLabContent = async (
                 type: Type.OBJECT,
                 properties: {
                     title: { type: Type.STRING },
-                    summary: { type: Type.OBJECT, properties: { content: { type: Type.STRING } }, required: ["content"] },
+                    summary: { type: Type.OBJECT, properties: { content: { type: Type.STRING, description: "Highly structured summary using markdown headings (#, ##), and bullet points (-). Never output a flat block of text." } }, required: ["content"] },
                     quiz: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { question: { type: Type.STRING }, options: { type: Type.ARRAY, items: { type: Type.STRING } }, correctAnswer: { type: Type.INTEGER }, explanation: { type: Type.STRING } }, required: ["question", "options", "correctAnswer", "explanation"] } },
                     flashcards: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { front: { type: Type.STRING }, back: { type: Type.STRING } }, required: ["front", "back"] } },
-                    slides: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { slideTitle: { type: Type.STRING }, bullets: { type: Type.ARRAY, items: { type: Type.STRING } }, speakerNotes: { type: Type.STRING }, imageKeyword: { type: Type.STRING } }, required: ["slideTitle", "bullets", "speakerNotes", "imageKeyword"] } }
+                    slides: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { slideTitle: { type: Type.STRING }, bullets: { type: Type.ARRAY, items: { type: Type.STRING } }, speakerNotes: { type: Type.STRING }, imageKeyword: { type: Type.STRING } }, required: ["slideTitle", "bullets", "speakerNotes", "imageKeyword"] } },
+                    mindmap: { type: Type.STRING, description: "Strict Mermaid.js mindmap syntax. Must start with 'mindmap'" },
+                    formulas: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { equation: { type: Type.STRING, description: "LaTeX formula without enclosing delimiters" }, explanation: { type: Type.STRING } }, required: ["equation", "explanation"] } },
+                    knowledgeGaps: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { concept: { type: Type.STRING }, missingInfo: { type: Type.STRING }, suggestion: { type: Type.STRING } }, required: ["concept", "missingInfo", "suggestion"] } },
+                    glossary: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { term: { type: Type.STRING }, definition: { type: Type.STRING } }, required: ["term", "definition"] } }
                 },
-                required: ["title", "summary", "quiz", "flashcards", "slides"]
+                required: ["title", "summary", "quiz", "flashcards", "slides", "mindmap", "formulas", "knowledgeGaps", "glossary"]
             }
         }
     }));

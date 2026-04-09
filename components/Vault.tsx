@@ -127,6 +127,9 @@ const Vault: React.FC<VaultProps> = ({ user, assets, chats, onViewAsset, onDelet
       case 'quiz': return { icon: 'fa-tasks', bg: 'bg-amber-600/20', text: 'text-amber-400', accent: 'bg-amber-500' };
       case 'flashcards': return { icon: 'fa-layer-group', bg: 'bg-violet-600/20', text: 'text-violet-400', accent: 'bg-violet-500' };
       case 'slides': return { icon: 'fa-chalkboard', bg: 'bg-blue-600/20', text: 'text-blue-400', accent: 'bg-blue-500' };
+      case 'mindmap': return { icon: 'fa-project-diagram', bg: 'bg-emerald-600/20', text: 'text-emerald-400', accent: 'bg-emerald-500' };
+      case 'formulas': return { icon: 'fa-square-root-alt', bg: 'bg-rose-600/20', text: 'text-rose-400', accent: 'bg-rose-500' };
+      case 'gaps': return { icon: 'fa-tools', bg: 'bg-amber-600/20', text: 'text-amber-400', accent: 'bg-amber-500' };
       case 'research': return { icon: 'fa-globe-americas', bg: 'bg-cyan-600/20', text: 'text-cyan-400', accent: 'bg-cyan-500' };
       case 'image_analysis': return { icon: 'fa-eye', bg: 'bg-purple-600/20', text: 'text-purple-400', accent: 'bg-purple-500' };
       default: return { icon: 'fa-file', bg: 'bg-slate-600/20', text: 'text-slate-400', accent: 'bg-slate-500' };
@@ -261,7 +264,7 @@ const Vault: React.FC<VaultProps> = ({ user, assets, chats, onViewAsset, onDelet
               {filteredAssets.map(asset => {
                 const style = getAssetStyle(asset.type);
                 return (
-                  <div key={asset.id} className="relative p-6 bg-surface border border-border rounded-3xl hover:border-text-muted transition-all group flex flex-col h-full overflow-hidden animate-fadeIn shadow-xl">
+                  <div key={asset.id} className="relative p-7 bg-surface border border-border rounded-3xl hover:border-text-muted hover:-translate-y-1.5 transition-all duration-300 ease-out group flex flex-col h-full overflow-hidden animate-fadeIn shadow-lg hover:shadow-xl">
                     <div className="flex justify-between items-start mb-6">
                       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${style.bg} ${style.text}`}>
                         <i className={`fas ${style.icon}`}></i>

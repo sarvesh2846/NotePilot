@@ -6,6 +6,9 @@ import SummaryView from './SummaryView';
 import QuizView from './QuizView';
 import SlideView from './SlideView';
 import FlashcardView from './FlashcardView';
+import MindMapView from './MindMapView';
+import FormulaSheetView from './FormulaSheetView';
+import GapAnalysisView from './GapAnalysisView';
 
 const LOADING_STATUSES = [
   "Initializing Research Engine...",
@@ -32,12 +35,15 @@ const LabPanel: React.FC<LabPanelProps> = ({ state, onProcess, onClear, onSaveAs
   const [statusIndex, setStatusIndex] = useState(0);
 
   // Determine which tabs to show based on available content
-  const visibleTabs = (['summary', 'quiz', 'flashcards', 'slides'] as LabTool[]).filter(t => {
+  const visibleTabs = (['summary', 'mindmap', 'formulas', 'gaps', 'quiz', 'flashcards', 'slides'] as LabTool[]).filter(t => {
      if (!currentPackage) return true; // During loading/initial state, show all
      if (t === 'summary' && currentPackage.summary) return true;
      if (t === 'quiz' && currentPackage.quiz) return true;
      if (t === 'flashcards' && currentPackage.flashcards) return true;
      if (t === 'slides' && currentPackage.slides) return true;
+     if (t === 'mindmap' && currentPackage.mindmap) return true;
+     if (t === 'formulas' && currentPackage.formulas) return true;
+     if (t === 'gaps' && currentPackage.knowledgeGaps) return true;
      return false;
   });
 
@@ -123,6 +129,9 @@ const LabPanel: React.FC<LabPanelProps> = ({ state, onProcess, onClear, onSaveAs
               >
                 <i className={`fas mr-2 ${
                   t === 'summary' ? 'fa-file-alt' : 
+                  t === 'mindmap' ? 'fa-project-diagram' :
+                  t === 'formulas' ? 'fa-square-root-alt' :
+                  t === 'gaps' ? 'fa-tools' :
                   t === 'quiz' ? 'fa-tasks' : 
                   t === 'flashcards' ? 'fa-layer-group' : 
                   'fa-chalkboard'
@@ -205,7 +214,16 @@ const LabPanel: React.FC<LabPanelProps> = ({ state, onProcess, onClear, onSaveAs
             </div>
             
             {activeTool === 'summary' && currentPackage.summary && (
-              <SummaryView summary={currentPackage.summary.content} title={currentPackage.title} />
+              <SummaryView summary={currentPackage.summary.content} title={currentPackage.title} glossary={currentPackage.glossary} />
+            )}
+            {activeTool === 'mindmap' && currentPackage.mindmap && (
+              <MindMapView mindmap={currentPackage.mindmap} />
+            )}
+            {activeTool === 'formulas' && currentPackage.formulas && (
+              <FormulaSheetView formulas={currentPackage.formulas} />
+            )}
+            {activeTool === 'gaps' && currentPackage.knowledgeGaps && (
+              <GapAnalysisView gaps={currentPackage.knowledgeGaps} />
             )}
             {activeTool === 'quiz' && currentPackage.quiz && (
               <QuizView quiz={currentPackage.quiz} />

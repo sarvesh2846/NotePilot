@@ -197,9 +197,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthComplete, initialMode = 'defa
       <div className="bg-white rounded-[2.5rem] shadow-2xl border border-indigo-100 overflow-hidden">
         <div className="p-10 pb-6">
           <div className="flex justify-center mb-8">
-            <div className={`w-20 h-20 rounded-3xl flex items-center justify-center text-white shadow-2xl ${step === 'waiting' || step === 'forgot_sent' ? 'bg-emerald-600 shadow-emerald-200' : 'bg-indigo-600 shadow-indigo-200'} transition-all duration-500`}>
-              <i className={`fas ${step === 'waiting' || step === 'forgot_sent' ? 'fa-envelope-open-text' : step === 'forgot_password' ? 'fa-key' : step === 'reset_password' ? 'fa-shield-alt' : isLogin ? 'fa-lock' : 'fa-user-plus'} text-3xl`}></i>
-            </div>
+            <img src="/logo.svg" alt="NotePilot Logo" className="w-auto h-24 object-contain theme-logo" />
           </div>
           
           <h2 className="text-3xl font-black text-center text-slate-900 mb-2 tracking-tight">

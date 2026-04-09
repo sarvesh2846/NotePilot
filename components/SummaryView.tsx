@@ -1,13 +1,16 @@
 
 import React, { useRef, useEffect } from 'react';
 import TTSPlayer from './TTSPlayer';
+import TooltipText from './TooltipText';
+import { GlossaryTerm } from '../types';
 
 interface SummaryViewProps {
   summary: string;
   title: string;
+  glossary?: GlossaryTerm[];
 }
 
-const SummaryView: React.FC<SummaryViewProps> = ({ summary, title }) => {
+const SummaryView: React.FC<SummaryViewProps> = ({ summary, title, glossary = [] }) => {
   const summaryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -81,7 +84,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ summary, title }) => {
       if (trimmed.startsWith('# ')) {
         return (
           <h1 key={i} className="text-3xl font-black mt-10 mb-6 text-text-main border-b border-border pb-4 tracking-tight uppercase print:text-black print:border-gray-300">
-            {formatInlineText(trimmed.replace('# ', ''))}
+            <TooltipText text={trimmed.replace('# ', '')} glossary={glossary} />
           </h1>
         );
       }
@@ -89,14 +92,14 @@ const SummaryView: React.FC<SummaryViewProps> = ({ summary, title }) => {
         return (
           <h2 key={i} className="text-2xl font-bold mt-8 mb-4 text-emerald-400 flex items-center gap-3 print:text-black">
             <span className="w-2 h-6 bg-emerald-500 rounded-full inline-block shrink-0 print:bg-black"></span>
-            {formatInlineText(trimmed.replace('## ', ''))}
+            <TooltipText text={trimmed.replace('## ', '')} glossary={glossary} />
           </h2>
         );
       }
       if (trimmed.startsWith('### ')) {
         return (
           <h3 key={i} className="text-xl font-bold mt-6 mb-3 text-emerald-400/90 print:text-black">
-            {formatInlineText(trimmed.replace('### ', ''))}
+            <TooltipText text={trimmed.replace('### ', '')} glossary={glossary} />
           </h3>
         );
       }
@@ -107,7 +110,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ summary, title }) => {
           <div key={i} className="ml-2 mb-2 flex items-start gap-3">
              <span className="text-emerald-500 font-black mt-1.5 text-[8px] print:text-black">●</span>
              <p className="text-text-main leading-relaxed print:text-black flex-1">
-               {formatInlineText(trimmed.substring(2))}
+               <TooltipText text={trimmed.substring(2)} glossary={glossary} />
              </p>
           </div>
         );
@@ -122,7 +125,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ summary, title }) => {
            <div key={i} className="ml-2 mb-2 flex items-start gap-3">
               <span className="text-emerald-500 font-bold font-mono mt-0.5 print:text-black">{num}.</span>
               <p className="text-text-main leading-relaxed print:text-black flex-1">
-                {formatInlineText(content)}
+                <TooltipText text={content} glossary={glossary} />
               </p>
            </div>
         );
@@ -152,10 +155,9 @@ const SummaryView: React.FC<SummaryViewProps> = ({ summary, title }) => {
       // Spacer
       if (trimmed === '') return <div key={i} className="h-4" />;
       
-      // Regular Paragraph
       return (
         <p key={i} className="mb-4 leading-relaxed text-text-main text-lg print:text-black">
-          {formatInlineText(line)}
+          <TooltipText text={line} glossary={glossary} />
         </p>
       );
     });
